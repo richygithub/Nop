@@ -32,20 +32,22 @@ let {
 \s+                   /* skip whitespace */
 
 "//"                    this.begin("commentline");
+<commentline><<EOF>>    return 'EOF'
 <commentline>\r\n       this.popState();
 <commentline>\n         this.popState();
 <commentline>.          /*skip all character*/ 
 
 "/*"                    this.begin("comment")
+<comment><<EOF>>        return 'EOF'
 <comment>"*/"           this.popState()
 <comment>\s+            /* skip whitespace*/
 <comment>.             /*skip all character*/ 
 
 
 
-"import"\b              { this.begin("import");console.log("...begin import...") }
-<import>\r\n            { this.popState(); console.log("import:",importfile)}
-<import>\n              { this.popState(); console.log("import:",importfile)}}
+"import"\b              { this.begin("import"); }
+<import>\r\n            { this.popState();}
+<import>\n              { this.popState();}}
 <import>.               importfile += yytext;
 
 
@@ -152,8 +154,8 @@ class:Class ID "{" typedefines "}"       { $$=$4;$$.name =$2;}
 
 
 
-service:Service ID "{" service_body "}" { console.log("service_body.",$4); $$=$4;$4.name=$2; }
-        |Service "{" service_body "}" { console.log("nameless service.",$3); $$=$3;$3.name="_base"; }
+service:Service ID "{" service_body "}" {  $$=$4;$4.name=$2; }
+        |Service "{" service_body "}" { $$=$3;$3.name="_base"; }
         ;
 
 namespace:Namespace ID ";"  {$$=$2};
@@ -175,10 +177,9 @@ expressions:
         |expressions namespace  {$$=$1;$$.name = $2;}
         |expressions class      {$$=getRoot($2,$1);}
         |expressions service    {$$=getRoot($2,$1);}
-        |expressions EOF        {console.log(" over....",$1);
-                                 endParse($1);
+        |expressions EOF        {endParse($1);
+                                 console.log("parse over",$1);
                                  parser.ast=$1;
-                                 //$1.genCode("J:\\study\\gitnmq\\nmq\\rpc")
                                  }
         ;
 
