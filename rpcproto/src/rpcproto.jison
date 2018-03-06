@@ -153,6 +153,7 @@ class:Class ID "{" typedefines "}"       { $$=$4;$$.name =$2;}
 
 
 service:Service ID "{" service_body "}" { console.log("service_body.",$4); $$=$4;$4.name=$2; }
+        |Service "{" service_body "}" { console.log("nameless service.",$3); $$=$3;$3.name="_base"; }
         ;
 
 namespace:Namespace ID ";"  {$$=$2};

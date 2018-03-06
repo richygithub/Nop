@@ -24,6 +24,9 @@ function genCode(fname, outdir) {
     if (root != null) {
         genCodeTs_1.genCode(root, outdir);
     }
+    else {
+        console.error(`ast root is null`);
+    }
 }
 exports.genCode = genCode;
 var proto_1 = require("./proto");
