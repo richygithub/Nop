@@ -165,10 +165,10 @@ case 29:
  this.$=$$[$0-2];this.$.name =$$[$0-4];
 break;
 case 30:
- console.log("service_body.",$$[$0-1]); this.$=$$[$0-1];$$[$0-1].name=$$[$0-3]; 
+  this.$=$$[$0-1];$$[$0-1].name=$$[$0-3]; 
 break;
 case 31:
- console.log("nameless service.",$$[$0-1]); this.$=$$[$0-1];$$[$0-1].name="_base"; 
+ this.$=$$[$0-1];$$[$0-1].name="_base"; 
 break;
 case 33: case 34: case 35:
 this.$=getService($$[$0]); 
@@ -195,10 +195,9 @@ case 44: case 45:
 this.$=getRoot($$[$0],$$[$0-1]);
 break;
 case 46:
-console.log(" over....",$$[$0-1]);
-                                 endParse($$[$0-1]);
+endParse($$[$0-1]);
+                                 console.log("parse over",$$[$0-1]);
                                  parser.ast=$$[$0-1];
-                                 //$$[$0-1].genCode("J:\\study\\gitnmq\\nmq\\rpc")
                                  
 break;
 }
@@ -701,70 +700,74 @@ case 0:/* skip whitespace */
 break;
 case 1:this.begin("commentline");
 break;
-case 2:this.popState();
+case 2:return 36
 break;
 case 3:this.popState();
 break;
-case 4:/*skip all character*/ 
+case 4:this.popState();
 break;
-case 5:this.begin("comment")
+case 5:/*skip all character*/ 
 break;
-case 6:this.popState()
+case 6:this.begin("comment")
 break;
-case 7:/* skip whitespace*/
+case 7:return 36
 break;
-case 8:/*skip all character*/ 
+case 8:this.popState()
 break;
-case 9: this.begin("import");console.log("...begin import...") 
+case 9:/* skip whitespace*/
 break;
-case 10: this.popState(); console.log("import:",importfile)
+case 10:/*skip all character*/ 
 break;
-case 11: this.popState(); console.log("import:",importfile)
+case 11: this.begin("import"); 
 break;
-case 12:importfile += yy_.yytext;
+case 12: this.popState();
 break;
-case 13:yy_.yytext = getType(yy_.yytext); return 7
+case 13: this.popState();
 break;
-case 14:yy_.yytext = getType(yy_.yytext) ; return 7
+case 14:importfile += yy_.yytext;
 break;
-case 15:yy_.yytext= getType(yy_.yytext) ; return 7
+case 15:yy_.yytext = getType(yy_.yytext); return 7
 break;
-case 16:yy_.yytext= getType(yy_.yytext); return 7
+case 16:yy_.yytext = getType(yy_.yytext) ; return 7
 break;
-case 17:yy_.yytext= getType(yy_.yytext); return 7
+case 17:yy_.yytext= getType(yy_.yytext) ; return 7
 break;
-case 18:return 5
+case 18:yy_.yytext= getType(yy_.yytext); return 7
 break;
-case 19:return 4
+case 19:yy_.yytext= getType(yy_.yytext); return 7
 break;
-case 20:return 31
+case 20:return 5
 break;
-case 21:return 21
+case 21:return 4
 break;
-case 22:return 25
+case 22:return 31
 break;
-case 23:return 29
+case 23:return 21
 break;
-case 24:return "Namespace"
+case 24:return 25
 break;
-case 25:return yy_.yytext
+case 25:return 29
 break;
-case 26:return 7
+case 26:return "Namespace"
 break;
-case 27: return 9
+case 27:return yy_.yytext
 break;
-case 28:return 'INT';
+case 28:return 7
 break;
-case 29:return 'NUMBER'
+case 29: return 9
 break;
-case 30:return 36
+case 30:return 'INT';
 break;
-case 31:return 'INVALID'
+case 31:return 'NUMBER'
+break;
+case 32:return 36
+break;
+case 33:return 'INVALID'
 break;
 }
 },
-rules: [/^(?:\s+)/,/^(?:\/\/)/,/^(?:\r\n)/,/^(?:\n)/,/^(?:.)/,/^(?:\/\*)/,/^(?:\*\/)/,/^(?:\s+)/,/^(?:.)/,/^(?:import\b)/,/^(?:\r\n)/,/^(?:\n)/,/^(?:.)/,/^(?:int32\b)/,/^(?:int64\b)/,/^(?:string\b)/,/^(?:float\b)/,/^(?:bool\b)/,/^(?:Array\b)/,/^(?:Buffer\b)/,/^(?:service\b)/,/^(?:remote\b)/,/^(?:handler\b)/,/^(?:class\b)/,/^(?:namespace\b)/,/^(?:[={}()<>,:;,])/,/^(?:[a-zA-Z]+\.[a-zA-Z]+)/,/^(?:[a-zA-Z]+[0-9]*)/,/^(?:[0-9]+\b)/,/^(?:[0-9]+(\.[0-9]+)?\b)/,/^(?:$)/,/^(?:.)/],
-conditions: {"import":{"rules":[10,11,12],"inclusive":false},"commentline":{"rules":[2,3,4],"inclusive":false},"comment":{"rules":[6,7,8],"inclusive":false},"INITIAL":{"rules":[0,1,5,9,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],"inclusive":true}}
+rules: [/^(?:\s+)/,/^(?:\/\/)/,/^(?:$)/,/^(?:\r\n)/,/^(?:\n)/,/^(?:.)/,/^(?:\/\*)/,/^(?:$)/,/^(?:\*\/)/,/^(?:\s+)/,/^(?:.)/,/^(?:import\b)/,/^(?:\r\n)/,/^(?:\n)/,/^(?:.)/,/^(?:int32\b)/,/^(?:int64\b)/,/^(?:string\b)/,/^(?:float\b)/,/^(?:bool\b)/,/^(?:Array\b)/,/^(?:Buffer\b)/,/^(?:service\b)/,/^(?:remote\b)/,/^(?:handler\b)/,/^(?:class\b)/,/^(?:namespace\b)/,/^(?:[={}()<>,:;,])/,/^(?:[a-zA-Z]+\.[a-zA-Z]+)/,/^(?:[a-zA-Z]+[0-9]*)/,/^(?:[0-9]+\b)/,/^(?:[0-9]+(\.[0-9]+)?\b)/,/^(?:$)/,/^(?:.)/],
+conditions: {"import":{"rules":[12,13,14],"inclusive":false},"commentline":{"rules":[2,3,4,5],"inclusive":false},"comment":{"rules":[7,8,9,10],"inclusive":false},"INITIAL":{"rules":[0,1,6,11,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33],"inclusive":true}}
 });
 return lexer;
 })();
