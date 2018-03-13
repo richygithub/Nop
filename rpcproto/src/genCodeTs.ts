@@ -673,7 +673,7 @@ function genServices(node:Ast.Root){
             this.app = app;
             this.remote = new Array();
             this.handler= new Array();
-            this.name=${node.name};
+            this.name="${node.name}";
             ${assignStr}
         }
         async process(serviceId:number,type:string, data:Buffer) {
