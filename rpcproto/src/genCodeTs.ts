@@ -667,11 +667,13 @@ function genServices(node:Ast.Root){
     export class Service{
         remote:Array<any>;
         handler:Array<any>;
+        name:string;
         app:any;
         constructor(app){
             this.app = app;
             this.remote = new Array();
             this.handler= new Array();
+            this.name=${node.name};
             ${assignStr}
         }
         async process(serviceId:number,type:string, data:Buffer) {
