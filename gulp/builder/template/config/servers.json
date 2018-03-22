@@ -1,0 +1,23 @@
+{
+		"connector": [
+			{"id":1,"name": "connector-server-1", "host": "10.12.21.18", "port": 3150, "clientPort": 3010, "frontend": true}
+		],
+		"area": [
+			{"id":20, "name": "area-server-1", "host": "127.0.0.1", "port": 3250, "area": 1}
+		],
+
+		"login": [
+			{"id":50,"name": "gate-server-1", "host": "127.0.0.1", "port":3550,"clientPort": 3014,"frontend":true }
+		],
+
+		"manager": [
+			{"id":60,"name":"manager-server-1","host":"127.0.0.1","port":3750}
+		],
+
+		"broker": [
+			{"id":90, "name": "broker-server-1", "host": "127.0.0.1", "port": 3940,"prior":100}
+		],
+		"chat":[
+			{"id":80,"name":"chat-server-1","host":"127.0.0.1","port":3950}
+		]
+}

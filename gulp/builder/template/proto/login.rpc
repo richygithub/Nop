@@ -1,0 +1,10 @@
+
+namespace login;
+//example
+service {
+    remote{
+    }
+
+    handler{
+    }
+}

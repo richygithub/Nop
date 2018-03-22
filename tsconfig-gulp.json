@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "commonjs",
+        "sourceMap": true,
+        "outDir": "jsgulp",
+        "lib":[
+            "es2016"
+        ]
+    },
+    "include":[
+        "gulp/**/*.ts",
+        "bin/**/*.ts",
+        "noplib/**/*.ts"],
+    "exclude":[
+        "**/__tests__/*.ts"
+    ]
+}

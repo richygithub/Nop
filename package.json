@@ -1,0 +1,29 @@
+{
+  "name": "nop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^9.4.7",
+    "colors": "^1.2.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.2.0",
+    "commander": "^2.15.0",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^4.0.1",
+    "gulp-watch": "^5.0.0",
+    "jest": "^22.4.2",
+    "jison": "^0.4.18",
+    "mkdirp": "^0.5.1",
+    "prettier": "^1.11.1",
+    "rpcprotol": "^1.0.6",
+    "ts-jest": "^22.4.2",
+    "typescript": "^2.7.2"
+  }
+}

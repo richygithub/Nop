@@ -1,0 +1,28 @@
+
+namespace area;
+//example
+
+
+class ServerList{
+    string name;
+    string host;
+    int32  port;
+}
+
+
+service player{
+    remote{
+        getServerList(int64 uid):Array<ServerList>;
+    }
+
+    handler{
+    }
+}
+
+service scene{
+    remote{
+    }
+    handler{
+    }
+
+}
