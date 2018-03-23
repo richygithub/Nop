@@ -87,7 +87,7 @@ export class RpcServer implements Receiver{
               //error.
                 header.err = error.message;
             }else{
-                reply =  h.serializeReply(ret);
+                reply = h.serializeReply(ret);
             }
     
             let sendSuc=false;

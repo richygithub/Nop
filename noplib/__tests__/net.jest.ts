@@ -13,15 +13,19 @@ let host="127.0.0.1";
 let port = 12345;
 
 let areaServer:Area = null;
-beforeAll((done)=>{
+beforeAll(()=>{
 
    areaServer = new Area({id:1,host,port});
+   /*
+   areaServer.start().then(data=>{
+       done();
+   });
+   */
    return areaServer.start();
 
 })
 
-
-test("tcp",async (done)=>{
+test("tcp",async ()=>{
 
     //let client = new RpcClient(NetProto.TCP,host,port );
 
@@ -30,9 +34,17 @@ test("tcp",async (done)=>{
 //    let ret = client.send(sendBuf);
 
     gRpc.addServer("area",1,{host:host,port:port,id:1});
-    let [serverList,error] = await gRpc.area().player.getServerList(1);
+    /*
+    gRpc.area().player.getServerList(1).then(data=>{
 
+        let [serverList,error]  = data;
+        console.log("list:",serverList,error?error.message:"");
+        expect(error).toBe(null);
+    });
+    */
+    let [serverList,error] = await gRpc.area().player.getServerList(1);
     console.log("list:",serverList,error?error.message:"");
+    expect(error).toBe(null);
     /*
     let server = new RpcServer(NetProto.TCP,host,port );
     let s = server.recv.bind(server);
@@ -47,8 +59,6 @@ test("tcp",async (done)=>{
     server.setService(service);
     server.bind();
 */   
-    expect(error).toBe(null);
 
-    done();
-
+    return;
 })

@@ -6,14 +6,14 @@ export function genCode(server:string){
 
     let template =`
     import {Application} from "nop";
-    import {gRpc,Rpc} from "../../rpc/rpc";
+    import {gRpcMgr,gRpc} from "../../rpc/rpc";
     import {Service} from "../../rpc/${server}/service";
     const Module = require("module");
     export class App extends Application{
         service:Service;
         constructor(opt){
             super(opt);
-            this.rpc=gRpc;
+            this.rpc=gRpcMgr;
         }
         init():boolean{
             return true;
@@ -22,9 +22,7 @@ export function genCode(server:string){
             this.service = new Service();
             return this.service;
         }
-        setStub(){
-            this.rpc = gRpc;
-         }
+
         async doStart(){
             return true;
         }

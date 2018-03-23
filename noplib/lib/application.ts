@@ -11,18 +11,23 @@ export interface Component{
 
 
 export interface RpcStub{
-    setRoute(type:string,route:(param:any,servers:Array<ServerInfo>)=>ServerInfo );
-    getRoute(type:string,parma:object):RpcClient;
-    addServer(type:string,id:number, opt:object):boolean;
+    getRoute(type:string,param:object):RpcClient;
+    addServer(type:string,id:number,host:string,port:number, opt:object):boolean;
     delServer(type:string,id:number):boolean;
 }
 
 
-export interface ServerInfo{
+export class ServerInfo{
     id:number;
     opt:object;
     client:RpcClient;
-    rpc:any;
+    name:string;
+    constructor(id:number,name:string,host:string,port:number, opt:object){
+        this.id=id;
+        this.name=name;
+        this.client = new RpcClient(NetProto.TCP,host,port);
+        this.opt = opt;
+    }
 }
 
 type routeFunc = (routeParam,servers:Array<ServerInfo>)=>ServerInfo;
@@ -52,16 +57,12 @@ export abstract class Application{
     abstract init():boolean;
     abstract async doStart():Promise<boolean>;
     abstract setService():Services;
-    abstract setStub(rpc:RpcStub);
 
-    addServer(type:string,id:number,opt:object):boolean{
-        return this.rpc.addServer(type,id, opt);
+    addServer(type:string,id:number,host:string,port:number,opt:object):boolean{
+        return this.rpc.addServer(type,id,host,port, opt);
     }
 
-    addRoute(type:string,func:routeFunc){
-        //this._routes.set(type,func);
-        this.rpc.setRoute(type,func);
-    }
+
     getRoute(type:string,param:object):RpcClient{
         return this.rpc.getRoute(type,param);
     }

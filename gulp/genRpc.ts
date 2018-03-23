@@ -5,38 +5,147 @@ import { reload } from "./utils"
 function firstLetterUpper(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
-function RpcName(name:string){
+function RpcName(name: string) {
     return `${firstLetterUpper(name)}Rpc`;
 }
-function ServiceName(name:string){
+function ServiceName(name: string) {
     return `${firstLetterUpper(name)}Service`;
 }
-function ServerName(name:string){
+function ServerName(name: string) {
     return `${firstLetterUpper(name)}`;
 }
 
 
+function genStub() {
 
-export function gen(rpcdir:string,servers:Array<string>):string {
 
-    if( path.isAbsolute(rpcdir) == false ){
+
+}
+
+export function gen(rpcdir: string, servers: Array<string>): string {
+
+    if (path.isAbsolute(rpcdir) == false) {
+        console.error(`rpcdir:${rpcdir} is not absolute path.`)
+        return;
+    }
+    servers = servers.filter(name => {
+        let filename = path.join(rpcdir, name, "stub", "remoteStub.ts");
+        return fs.existsSync(filename);
+    })
+
+
+    let finalRpc = `export const gRpc = {
+         ${ servers.map(name=>{
+            return `${name} : new ${RpcName(name)}()`
+     }).join(",")}
+    }
+     `
+
+     let imptStr = `${servers.map(name => {
+        return `import {Rpc as ${RpcName(name)} } from "./${name}/stub/remoteStub"`
+    }).join(";")} `;
+
+    let routeDef = `${servers.map(s=>{
+        return `let ${s}Route = gRpcMgr.${s}Route.bind(gRpcMgr);`
+    }).join("")}`;
+
+
+    let sdef = `${servers.map(name => {
+        return `private _${name}:Map<number,ServerInfo> = new Map<number,ServerInfo>();
+        ${name}Array:Array<ServerInfo>;
+        ${name}Route:(routeParam)=>RpcClient = function(routeParam){
+            return this.${name}Array?this.${name}Array[0].client:null;
+        }
+        `
+    }).join(";")} `;
+
+    let getstr = `${servers.map(name => {
+        return ` case "${name}":
+        return this.${name}Route(param,this._areaArray).client;
+        `
+    }).join("")} `;
+
+    let addstr = `${servers.map(name => {
+        return ` case "${name}":
+        this._${name}.set(id, new ServerInfo(id,name,host,port, opt));
+        this.${name}Array=[...this._${name}.values()];
+        return true;
+        `
+    }).join("")} `;
+
+    let delstr = `${servers.map(name => {
+        return ` case "${name}":
+        ret = this._${name}.delete(id);
+        this.${name}Array = [...this._${name}.values()];
+        return ret;
+        `
+    }).join("")} `;
+    let template = ` import {MapArray} from "nop"
+import * as utils from "nop"
+import {RpcClient, NetProto,ServerInfo} from "nop"
+
+${imptStr}
+
+
+type RouteFunc = <T>(routeParam, data:Array<T>)=>any;
+
+class RpcMgr{
+   
+    ${sdef}
+    getRoute(name: string, param: object): RpcClient {
+        let fn = this[\`\${name}Route\`];
+        return fn?fn(param):null;
+      }
+
+    addServer(name:string, id: number, host:string,port:number, opt: any):boolean{
+        switch(name){
+            ${addstr}
+            default:
+            break;
+        }
+        return false;
+    }
+    delServer(stype:string,id:number):boolean{
+        let ret=false;
+        switch(stype){
+          ${delstr}
+          default:
+          break;
+        }
+        return ret;
+      }
+}
+
+export const gRpcMgr=new RpcMgr();
+${finalRpc}
+`
+    return template;
+
+}
+
+
+/*
+
+export function gen2(rpcdir: string, servers: Array<string>): string {
+
+    if (path.isAbsolute(rpcdir) == false) {
         console.error(`rpcdir:${rpcdir} is not absolute path.`)
         return;
     }
 
 
 
-    servers=servers.filter( name=>{
-        let filename=path.join(rpcdir,name,"stub","remoteStub.ts");
+    servers = servers.filter(name => {
+        let filename = path.join(rpcdir, name, "stub", "remoteStub.ts");
         return fs.existsSync(filename);
     })
 
     let imptStr = `${servers.map(name => {
-        return `import {Rpc as ${RpcName(name)},Service as ${ServiceName(name)} } from "./${name}/stub/remoteStub"`
+        return `import {Rpc as ${RpcName(name)} } from "./${name}/stub/remoteStub"`
     }).join(";")} `;
 
 
-    let serverdef=`${servers.map(name => {
+    let serverdef = `${servers.map(name => {
         return `export class ${ServerName(name)} implements ServerInfo {
             id:number;
             rpc:${RpcName(name)};
@@ -53,7 +162,7 @@ export function gen(rpcdir:string,servers:Array<string>):string {
     }).join(";")} `;
 
 
-    let sdef=`${servers.map(name => {
+    let sdef = `${servers.map(name => {
         return `private _${name}:Map<number,${ServerName(name)}> = new Map<number,${ServerName(name)}>();
         private _${name}Array:Array<${ServerName(name)}>;
         private _${name}Null:any=genNullRpc(${ServiceName(name)});
@@ -76,7 +185,7 @@ export function gen(rpcdir:string,servers:Array<string>):string {
         `
     }).join(";")} `;
 
-    let setstr=`${servers.map(name => {
+    let setstr = `${servers.map(name => {
         return ` case "${name}":
         this.${name}Route = func;
         return true;
@@ -89,7 +198,7 @@ export function gen(rpcdir:string,servers:Array<string>):string {
         `
     }).join("")} `;
 
-    let addstr=`${servers.map(name => {
+    let addstr = `${servers.map(name => {
         return ` case "${name}":
         this._${name}.set( id,new ${ServerName(name)}(id,opt) );
         this._${name}Array=[...this._${name}.values()];
@@ -97,7 +206,7 @@ export function gen(rpcdir:string,servers:Array<string>):string {
         `
     }).join("")} `;
 
-    let delstr=`${servers.map(name => {
+    let delstr = `${servers.map(name => {
         return ` case "${name}":
         ret = this._${name}.delete(id);
         this._${name}Array = [...this._${name}.values()];
@@ -183,3 +292,4 @@ export const gRpc=new Rpc();
 `
     return template; 
 }
+*/
